@@ -8,7 +8,7 @@ import random
 import string
 
 import numpy as np
-import tensorflow as tf    
+import tensorflow as tf
 import matplotlib.pyplot as plt
 
 import nottingham_util
@@ -21,7 +21,7 @@ def get_config_name(config):
             replace_dot("_mc_{}".format(config.melody_coeff)) + \
             replace_dot("_dp_{}".format(config.dropout_prob)) + \
             replace_dot("_idp_{}".format(config.input_dropout_prob)) + \
-            replace_dot("_tb_{}".format(config.time_batch_len)) 
+            replace_dot("_tb_{}".format(config.time_batch_len))
 
 class DefaultConfig(object):
     # model parameters
@@ -33,7 +33,7 @@ class DefaultConfig(object):
     cell_type = 'lstm'
 
     # learning parameters
-    max_time_batches = 9 
+    max_time_batches = 9
     time_batch_len = 128
     learning_rate = 5e-3
     learning_rate_decay = 0.9
@@ -45,9 +45,9 @@ class DefaultConfig(object):
 
     def __repr__(self):
         return """Num Layers: {}, Hidden Size: {}, Melody Coeff: {}, Dropout Prob: {}, Input Dropout Prob: {}, Cell Type: {}, Time Batch Len: {}, Learning Rate: {}, Decay: {}""".format(self.num_layers, self.hidden_size, self.melody_coeff, self.dropout_prob, self.input_dropout_prob, self.cell_type, self.time_batch_len, self.learning_rate, self.learning_rate_decay)
-    
+
 if __name__ == '__main__':
-    np.random.seed()      
+    np.random.seed()
 
     parser = argparse.ArgumentParser(description='Script to train and save a model.')
     parser.add_argument('--dataset', type=str, default='softmax',
@@ -82,7 +82,7 @@ if __name__ == '__main__':
         raise Exception("Run name {} already exists, choose a different one", format(run_folder))
     os.makedirs(run_folder)
 
-    logger = logging.getLogger(__name__) 
+    logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
     logger.addHandler(logging.StreamHandler())
     logger.addHandler(logging.FileHandler(os.path.join(run_folder, "training.log")))
@@ -119,7 +119,7 @@ if __name__ == '__main__':
 
         logger.info(config)
         config_file_path = os.path.join(run_folder, get_config_name(config) + '.config')
-        with open(config_file_path, 'w') as f: 
+        with open(config_file_path, 'w') as f:
             cPickle.dump(config, f)
 
         with tf.Graph().as_default(), tf.Session() as session:
@@ -138,7 +138,7 @@ if __name__ == '__main__':
             train_losses, valid_losses = [], []
             start_time = time.time()
             for i in range(config.num_epochs):
-                loss = util.run_epoch(session, train_model, 
+                loss = util.run_epoch(session, train_model,
                     data["train"]["data"], training=True, testing=False)
                 train_losses.append((i, loss))
                 if i == 0:
@@ -159,7 +159,7 @@ if __name__ == '__main__':
                         saver.save(session, os.path.join(run_folder, config.model_name))
                         saved_flag = True
                 elif not start_saving:
-                    start_saving = True 
+                    start_saving = True
                     logger.info('Valid loss increased for the first time, will start saving models')
                     saver.save(session, os.path.join(run_folder, config.model_name))
                     saved_flag = True
