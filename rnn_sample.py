@@ -11,6 +11,7 @@ import util
 import nottingham_util
 from model import Model, NottinghamModel
 from rnn import DefaultConfig
+from datetime import datetime
 
 if __name__ == '__main__':
     np.random.seed()      
@@ -113,6 +114,7 @@ if __name__ == '__main__':
                     chord[:r] = sample_seq[i][:r]
 
             seq.append(chord)
-
-        writer.dump_sequence_to_midi(seq, "best.midi", 
+        i = datetime.now()
+        time_stamp = i.strftime('%Y/%m/%d_%H:%M:%S')
+        writer.dump_sequence_to_midi(seq, "exp_music_" + time_stamp + ".midi", 
             time_step=time_step, resolution=resolution)
